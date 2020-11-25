@@ -2,6 +2,7 @@ package com.mygdx.game.General;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.tools.texturepacker.TexturePacker;
 import com.mygdx.game.Pantallas.Pantalla1;
 
 public class TEOTB extends Game {
@@ -9,7 +10,7 @@ public class TEOTB extends Game {
 	private AssetManager manager;
 
 	/*public static void main (String[] args) throws Exception {
-		TexturePacker.process("C:\\Users\\abran\\Desktop\\pruebafusion", "C:\\Users\\abran\\Desktop\\pruebafusion\\fusion", "llevar");
+		TexturePacker.process("C:\\Users\\abran\\Desktop\\pruebafusion", "C:\\Users\\abran\\Desktop\\pruebafusion\\fusion", "Player");
 	}*/
 
 	public AssetManager getManager() {
