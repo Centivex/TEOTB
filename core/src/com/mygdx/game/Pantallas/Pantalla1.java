@@ -12,6 +12,7 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.mygdx.game.Actores.Camara;
 import com.mygdx.game.Actores.Player;
+import com.mygdx.game.Actores.prueba;
 import com.mygdx.game.General.BaseScreen;
 import com.mygdx.game.General.Constante;
 
@@ -45,13 +46,17 @@ public class Pantalla1 extends BaseScreen {
         //---------------------------------------------------------------------------------------------------------
         //Actores
         camara=new Camara(cam);
-        player=new Player(world);
+        //player=new Player(world);
+
+        prueba prub = new prueba();
 
         //---------------------------------------------------------------------------------------------------------
         //Escenario
         stage=new Stage(viewp);
+
         stage.addActor(camara);
-        stage.addActor(player);
+        //stage.addActor(player);
+        stage.addActor(prub);
     }
 
     @Override
