@@ -46,17 +46,17 @@ public class Pantalla1 extends BaseScreen {
         //---------------------------------------------------------------------------------------------------------
         //Actores
         camara=new Camara(cam);
-        //player=new Player(world);
+        player=new Player(world);
 
-        prueba prub = new prueba();
+        //prueba prub = new prueba();
 
         //---------------------------------------------------------------------------------------------------------
         //Escenario
         stage=new Stage(viewp);
 
         stage.addActor(camara);
-        //stage.addActor(player);
-        stage.addActor(prub);
+        stage.addActor(player);
+        //stage.addActor(prub);
     }
 
     @Override

@@ -37,19 +37,18 @@ public class Animaciones {
 
     public void play(Batch batch,boolean mov, float posx, float posy){
 
-
         if(mov==true) {
+            if (frame==0){
+                frame=1;
+            }
             frame += Gdx.graphics.getDeltaTime();
-            TextureRegion currentFrame = anim.getKeyFrame(frame, mov);
-            batch.draw(currentFrame, posx, posy, sprit.getWidth()*ppm,sprit.getHeight()*ppm);
-
 
         }else  {
-
             frame=0;
-            TextureRegion currentFrame = anim.getKeyFrame(frame, mov);
-            batch.draw(currentFrame,posx,posy,sprit.getWidth()*ppm,sprit.getHeight()*ppm);
         }
+
+        TextureRegion currentFrame = anim.getKeyFrame(frame, mov);
+        batch.draw(currentFrame, posx, posy, sprit.getWidth()*ppm,sprit.getHeight()*ppm);
 
     }
 
