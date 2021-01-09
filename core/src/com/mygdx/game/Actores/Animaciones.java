@@ -7,7 +7,7 @@ import com.mygdx.game.General.Constante;
 
 import static com.mygdx.game.General.Constante.*;
 
-public class Animaciones {
+public  class Animaciones {
 
     //animacion
     private TextureAtlas textAtlas;
@@ -42,14 +42,17 @@ public class Animaciones {
                 frame=1;
             }
             frame += Gdx.graphics.getDeltaTime();
+            System.out.println("frame "+frame);
 
-        }else  {
-            frame=0;
         }
 
         TextureRegion currentFrame = anim.getKeyFrame(frame, mov);
         batch.draw(currentFrame, posx, posy, sprit.getWidth()*ppm,sprit.getHeight()*ppm);
 
+    }
+
+    public void reset(){
+        frame=0;
     }
 
 }

@@ -15,10 +15,10 @@ public class Player extends Actor {
 
     //sprites y animaciones
     private TextureAtlas textAtlas;
-    private Animaciones animaciones[] = new Animaciones[4];
+    private Animaciones animaciones[] = new Animaciones[8];
     private int a=0;
-    private boolean mov=false;
-
+    private boolean play=false;
+    //para medidas
     private TextureAtlas.AtlasRegion textAtlasRegion;
     private Sprite spritPlayer;
 
@@ -48,10 +48,23 @@ public class Player extends Actor {
         //--------------------------------------------------------------------------------------------------------
         //animacion
 
-        animaciones[0]=new Animaciones(textAtlas,"Walk_Up",4);
-        animaciones[1]=new Animaciones(textAtlas,"Walk_Down",4);
-        animaciones[2]=new Animaciones(textAtlas,"Walk_Left",4);
-        animaciones[3]=new Animaciones(textAtlas,"Walk_Right",4);
+        //parado
+        animaciones[0]=new Animaciones(textAtlas,"Walk_Up",1);
+        animaciones[1]=new Animaciones(textAtlas,"Walk_Down",1);
+        animaciones[2]=new Animaciones(textAtlas,"Walk_Left",1);
+        animaciones[3]=new Animaciones(textAtlas,"Walk_Right",1);
+
+        //mov
+        animaciones[4]=new Animaciones(textAtlas,"Walk_Up",4);
+        animaciones[5]=new Animaciones(textAtlas,"Walk_Down",4);
+        animaciones[6]=new Animaciones(textAtlas,"Walk_Left",4);
+        animaciones[7]=new Animaciones(textAtlas,"Walk_Right",4);
+
+        //attack
+ /*        animaciones[4]=new Animaciones(textAtlas,"Attack_Up",4);
+        animaciones[5]=new Animaciones(textAtlas,"Attack_Down",4);
+        animaciones[6]=new Animaciones(textAtlas,"Attack_Left",4);
+        animaciones[7]=new Animaciones(textAtlas,"Attack_Right",4);*/
 
         //--------------------------------------------------------------------------------------------------------
         //cuerpo
@@ -72,35 +85,57 @@ public class Player extends Actor {
     @Override
     public void act(float delta) {
         super.act(delta);
+
         //moviemiento
         if (Gdx.input.isKeyPressed(Input.Keys.W)) {
             playerbody.setLinearVelocity(0,50*ppm);
-            a=0;
-            mov=true;
+            a=4;
+            play=true;
         }else  if (Gdx.input.isKeyPressed(Input.Keys.S)) {
             playerbody.setLinearVelocity(0,-50*ppm);
-            a=1;
-            mov=true;
+            a=5;
+            play=true;
         }else  if (Gdx.input.isKeyPressed(Input.Keys.A)) {
             playerbody.setLinearVelocity(-50*ppm,0);
-            a=2;
-            mov=true;
+            a=6;
+            play=true;
         }else  if (Gdx.input.isKeyPressed(Input.Keys.D) ) {
             playerbody.setLinearVelocity(50*ppm,0);
-            a=3;
-            mov=true;
+            a=7;
+            play=true;
         }else{
             playerbody.setLinearVelocity(0,0);
-            mov=false;
+            play=false;
         }
 
+
+        //parado
+        if (play==false){
+            animaciones[a].reset();
+            if (a==4){
+                a=0;
+            }else if (a==5){
+                a=1;
+            }else if (a==6){
+                a=2;
+            }else if (a==7){
+                a=3;
+            }
+        }
+
+        //mmmmmmmmmmmmm
+        /*if (Gdx.input.isKeyPressed(Input.Keys.SPACE)){
+            playerbody.setLinearVelocity(0,0);
+            a=a+4;
+            play=true;
+        }
+*/
 
     }
 
     @Override
     public void draw(Batch batch, float parentAlpha) {
-        animaciones[a].play(batch,mov,playerbody.getPosition().x-(((spritPlayer.getWidth()/2))*ppm), playerbody.getPosition().y-((spritPlayer.getHeight()/2)*ppm));
-
+        animaciones[a].play(batch,play,playerbody.getPosition().x-(((spritPlayer.getWidth()/2))*ppm), playerbody.getPosition().y-((spritPlayer.getHeight()/2)*ppm));
 
 
     }
