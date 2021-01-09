@@ -32,7 +32,7 @@ public  class Animaciones {
             textRegion[i]= (textAtlas.findRegion(nomFrame,i));
         }
 
-        anim= new Animation<TextureRegion>(0.30f, textRegion);
+        anim= new Animation<TextureRegion>(0.1f, textRegion);
     }
 
     public void play(Batch batch,boolean mov, float posx, float posy){

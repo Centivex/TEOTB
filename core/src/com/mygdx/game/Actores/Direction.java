@@ -1,6 +1,6 @@
 package com.mygdx.game.Actores;
 
-public enum Parado {
+public enum Direction {
     ARRIBA,
     ABAJO,
     DERECHA,

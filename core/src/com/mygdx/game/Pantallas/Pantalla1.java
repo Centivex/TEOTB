@@ -8,6 +8,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.mygdx.game.Actores.Camara;
@@ -41,7 +42,7 @@ public class Pantalla1 extends BaseScreen {
 
         //Camara
         cam= new OrthographicCamera();
-        viewp=new FitViewport(256*ppm,256*ppm,cam);
+        viewp=new PixelScreenViewport(256*ppm,256*ppm, cam);
 
         //---------------------------------------------------------------------------------------------------------
         //Actores
@@ -59,7 +60,13 @@ public class Pantalla1 extends BaseScreen {
         //stage.addActor(prub);
     }
 
-    @Override
+	@Override
+	public void resize(int width, int height) {
+		super.resize(width, height);
+		viewp.update(width, height);
+	}
+
+	@Override
     public void render(float delta) {
         super.render(delta);
         Gdx.gl.glClearColor(0, 0, 0, 1);

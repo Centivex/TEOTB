@@ -2,12 +2,11 @@ package com.mygdx.game.Actores;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.*;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.mygdx.game.General.Constante;
+
+import java.util.HashMap;
 
 import static com.mygdx.game.General.Constante.*;
 
@@ -15,18 +14,22 @@ public class Player extends Actor {
 
     //sprites y animaciones
     private TextureAtlas textAtlas;
-    private Animaciones animaciones[] = new Animaciones[8];
-    private int a=0;
-    private boolean play=false;
+
+    // guardamos las animaciones en un HashMap que mapea cada dirección con su animación
+	private HashMap<Direction, Animaciones> animacionesParado = new HashMap<>();
+	private HashMap<Direction, Animaciones> animacionesCaminando = new HashMap<>();
+	private HashMap<Direction, Animaciones> animacionesAtacando = new HashMap<>();
     //para medidas
     private TextureAtlas.AtlasRegion textAtlasRegion;
     private Sprite spritPlayer;
+	private Estados estadoActual = Estados.PARADO;
 
 
     //cuerpo
     private World world;
     private Body playerbody;
     private Fixture playerFixture;
+    private Direction direction = Direction.ABAJO;
 
     public Body getPlayerbody() {
         return playerbody;
@@ -49,22 +52,22 @@ public class Player extends Actor {
         //animacion
 
         //parado
-        animaciones[0]=new Animaciones(textAtlas,"Walk_Up",1);
-        animaciones[1]=new Animaciones(textAtlas,"Walk_Down",1);
-        animaciones[2]=new Animaciones(textAtlas,"Walk_Left",1);
-        animaciones[3]=new Animaciones(textAtlas,"Walk_Right",1);
+        animacionesParado.put(Direction.ARRIBA, new Animaciones(textAtlas,"Walk_Up",1));
+        animacionesParado.put(Direction.ABAJO, new Animaciones(textAtlas,"Walk_Down",1));
+        animacionesParado.put(Direction.IZQUIERDA, new Animaciones(textAtlas,"Walk_Left",1));
+        animacionesParado.put(Direction.DERECHA, new Animaciones(textAtlas,"Walk_Right",1));
 
         //mov
-        animaciones[4]=new Animaciones(textAtlas,"Walk_Up",4);
-        animaciones[5]=new Animaciones(textAtlas,"Walk_Down",4);
-        animaciones[6]=new Animaciones(textAtlas,"Walk_Left",4);
-        animaciones[7]=new Animaciones(textAtlas,"Walk_Right",4);
+        animacionesCaminando.put(Direction.ARRIBA, new Animaciones(textAtlas,"Walk_Up",4));
+        animacionesCaminando.put(Direction.ABAJO, new Animaciones(textAtlas,"Walk_Down",4));
+        animacionesCaminando.put(Direction.IZQUIERDA, new Animaciones(textAtlas,"Walk_Left",4));
+        animacionesCaminando.put(Direction.DERECHA, new Animaciones(textAtlas,"Walk_Right",4));
 
         //attack
- /*        animaciones[4]=new Animaciones(textAtlas,"Attack_Up",4);
-        animaciones[5]=new Animaciones(textAtlas,"Attack_Down",4);
-        animaciones[6]=new Animaciones(textAtlas,"Attack_Left",4);
-        animaciones[7]=new Animaciones(textAtlas,"Attack_Right",4);*/
+        animacionesAtacando.put(Direction.ARRIBA, new Animaciones(textAtlas,"Attack_Up",4));
+        animacionesAtacando.put(Direction.ABAJO, new Animaciones(textAtlas,"Attack_Down",4));
+        animacionesAtacando.put(Direction.IZQUIERDA, new Animaciones(textAtlas,"Attack_Left",4));
+        animacionesAtacando.put(Direction.DERECHA, new Animaciones(textAtlas,"Attack_Right",4));
 
         //--------------------------------------------------------------------------------------------------------
         //cuerpo
@@ -89,55 +92,64 @@ public class Player extends Actor {
         //moviemiento
         if (Gdx.input.isKeyPressed(Input.Keys.W)) {
             playerbody.setLinearVelocity(0,50*ppm);
-            a=4;
-            play=true;
+            direction = Direction.ARRIBA;
+            estadoActual = Estados.CORRIENDO;
         }else  if (Gdx.input.isKeyPressed(Input.Keys.S)) {
             playerbody.setLinearVelocity(0,-50*ppm);
-            a=5;
-            play=true;
+	        direction = Direction.ABAJO;
+	        estadoActual = Estados.CORRIENDO;
         }else  if (Gdx.input.isKeyPressed(Input.Keys.A)) {
             playerbody.setLinearVelocity(-50*ppm,0);
-            a=6;
-            play=true;
+	        direction = Direction.IZQUIERDA;
+	        estadoActual = Estados.CORRIENDO;
         }else  if (Gdx.input.isKeyPressed(Input.Keys.D) ) {
             playerbody.setLinearVelocity(50*ppm,0);
-            a=7;
-            play=true;
+	        direction = Direction.DERECHA;
+	        estadoActual = Estados.CORRIENDO;
         }else{
+	        estadoActual = Estados.PARADO;
             playerbody.setLinearVelocity(0,0);
-            play=false;
         }
 
-
-        //parado
-        if (play==false){
-            animaciones[a].reset();
-            if (a==4){
-                a=0;
-            }else if (a==5){
-                a=1;
-            }else if (a==6){
-                a=2;
-            }else if (a==7){
-                a=3;
-            }
-        }
-
-        //mmmmmmmmmmmmm
-        /*if (Gdx.input.isKeyPressed(Input.Keys.SPACE)){
+        if (Gdx.input.isKeyPressed(Input.Keys.SPACE)){
             playerbody.setLinearVelocity(0,0);
-            a=a+4;
-            play=true;
+            estadoActual = Estados.ATACANDO;
         }
-*/
 
+        // resetea las animaciones que no se están usando
+	    switch (estadoActual){
+		    case PARADO:
+			    animacionesCaminando.get(direction).reset();
+			    animacionesAtacando.get(direction).reset();
+			    break;
+		    case CORRIENDO:
+			    animacionesParado.get(direction).reset();
+			    animacionesAtacando.get(direction).reset();
+			    break;
+		    case ATACANDO:
+			    animacionesParado.get(direction).reset();
+			    animacionesCaminando.get(direction).reset();
+			    break;
+	    }
     }
 
     @Override
     public void draw(Batch batch, float parentAlpha) {
-        animaciones[a].play(batch,play,playerbody.getPosition().x-(((spritPlayer.getWidth()/2))*ppm), playerbody.getPosition().y-((spritPlayer.getHeight()/2)*ppm));
+	    Animaciones animacionActual = null;
 
+	    // pilla la animacion que corresponde al estado
+	    switch (estadoActual) {
+		    case PARADO:
+			    animacionActual = animacionesParado.get(direction);
+			    break;
+		    case CORRIENDO:
+			    animacionActual = animacionesCaminando.get(direction);
+			    break;
+		    case ATACANDO:
+			    animacionActual = animacionesAtacando.get(direction);
+	    }
 
+	    animacionActual.play(batch, estadoActual != Estados.PARADO,playerbody.getPosition().x-(((spritPlayer.getWidth()/2))*ppm), playerbody.getPosition().y-((spritPlayer.getHeight()/2)*ppm));
     }
 
 }
